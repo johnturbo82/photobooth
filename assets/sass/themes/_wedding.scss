@@ -1,0 +1,422 @@
+/**
+ * Wedding Theme
+ *
+ * Angelehnt an hochzeit.schoettner.rocks: dunkles Tannengrün, Gold,
+ * Tangerine für Namen, Cinzel für Überschriften und Buttons, EB Garamond für Text.
+ */
+@font-face {
+  font-display: swap;
+  font-family: 'Cinzel';
+  font-weight: 400 900;
+  src: url('../fonts/wedding/Cinzel.ttf') format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'EB Garamond';
+  font-weight: 400 800;
+  src: url('../fonts/wedding/EBGaramond.ttf') format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Tangerine';
+  font-weight: 400;
+  src: url('../fonts/wedding/Tangerine-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Tangerine';
+  font-weight: 700;
+  src: url('../fonts/wedding/Tangerine-Bold.ttf') format('truetype');
+}
+
+// Die Farb-Variablen aus der Admin-Konfiguration (ThemeUtility, :root) überschreiben,
+// damit alle Komponenten (Galerie, Dialoge, Menüs, Viewer, ...) die Hochzeitsfarben nutzen.
+// html[...] ist spezifischer als :root und gewinnt daher gegen den Inline-Style.
+html[data-ui-theme='wedding'] {
+  --primary-color: #be9847;
+  --primary-light-color: #0e2725;
+  --secondary-color: #0e2725;
+  --highlight-color: #d2b880;
+  --secondary-font-color: #fff;
+  --button-font-color: #fff;
+  --font-color: #fff;
+  --cheese-color: #fff;
+  --panel-color: #0e2725;
+  --border-color: #be9847;
+  --box-color: #0e2725;
+  --gallery-button-color: #be9847;
+  --background-countdown-color: #0e2725;
+  --start-text-color: #fff;
+  --event-text-color: #fff;
+  --countdown-font-color: #fff;
+  --buzzer-message-font-color: #fff;
+  --screensaver-text-color: #fff;
+  --font-family-event-text: 'Tangerine';
+  --font-family-start-text: 'Cinzel';
+
+  --gallery-background: #0e2725;
+  --gallery-color: #fff;
+  --gallery-bar-background: #0e2725;
+  --gallery-bar-color: #fff;
+  --gallery-card-color: #fff;
+  --gallery-card-background: #0e2725;
+  --gallery-card-border-radius: 10px;
+  --gallery-card-focus-background: #163a37;
+  --gallery-card-focus-color: #fff;
+  --gallery-title-color: #fff;
+
+  --modal-backdrop: rgba(5, 18, 17, 0.85);
+  --modal-color: #fff;
+  --modal-background: #0e2725;
+  --modal-button-border-radius: 10px;
+  --dialog-color: #fff;
+  --dialog-background: #0e2725;
+  --dialog-button-border-radius: 10px;
+  --overlay-background: rgba(5, 18, 17, 0.85);
+
+  --sidenav-background: rgba(5, 18, 17, 0.9);
+  --sidenav-close-border-radius: 10px;
+  --sidenav-list-item-boder-radius: 10px;
+
+  --viewer-background: #0e2725;
+  --viewer-foreground: #fff;
+  --viewer-surface: #163a37;
+  --viewer-accent: #be9847;
+  --viewer-accent-foreground: #fff;
+}
+
+[data-ui-theme='wedding'] {
+  --wedding-bg: #0e2725;
+  --wedding-bg-translucent: rgba(14, 39, 37, 0.82);
+  --wedding-gold: #be9847;
+  --wedding-gold-light: #d2b880;
+  --wedding-text: #fff;
+  --wedding-muted: rgba(255, 255, 255, 0.7);
+  --wedding-radius: 10px;
+
+  --font-family: 'EB Garamond', serif;
+  --font-family-event-text: 'Tangerine';
+  --font-family-start-text: 'Cinzel';
+  --start-text-color: var(--wedding-text);
+  --event-text-color: var(--wedding-text);
+  --countdown-font-color: var(--wedding-text);
+  --background-countdown-color: var(--wedding-bg);
+
+  color: var(--wedding-text);
+
+  &,
+  body {
+    background: var(--wedding-bg);
+  }
+
+  body {
+    font-family: var(--font-family);
+  }
+
+  .stage-inner {
+    // über dem Ergebnisbild (::after, z-index 1)
+    z-index: 2;
+    padding: clamp(1rem, 4vmin, 3rem);
+  }
+
+  .github-corner {
+    display: none;
+  }
+
+  // Logo/QR-Code wie die Bilder auf der Website: Goldkante oben und unten
+  .logo {
+    max-width: min(30vw, 20rem);
+    padding: clamp(0.6rem, 2vmin, 1.25rem);
+    border-radius: var(--wedding-radius);
+    border-top: 4px solid var(--wedding-gold);
+    border-bottom: 4px solid var(--wedding-gold);
+    background: #fff;
+
+    img {
+      border-radius: 0;
+    }
+  }
+
+  /**
+   * Startseite
+   */
+  .stage--start {
+    .stage-start__text {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .names {
+      max-width: min(100%, 60rem);
+    }
+
+    .names-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+
+      // "Willkommen ..." (Titel) über den Namen anzeigen
+      h1.start-text {
+        order: -1;
+        margin: 0 0 0.75rem;
+      }
+    }
+
+    .event-text {
+      margin: 0;
+      font-weight: 400;
+      font-size: clamp(3.5rem, 13vmin, 8rem);
+      line-height: 1;
+
+      .fa {
+        font-size: 0.3em;
+        vertical-align: middle;
+        margin: 0 0.5em;
+        color: var(--wedding-gold);
+      }
+    }
+
+    .start-text {
+      margin: 0.75rem 0 0;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    h1.start-text {
+      font-size: clamp(1rem, 3.5vmin, 1.75rem);
+    }
+
+    h2.start-text {
+      font-size: clamp(0.8rem, 2.5vmin, 1.1rem);
+      color: var(--wedding-muted);
+    }
+
+    // Goldlinien wie bei "Samstag" / "um 14 Uhr" auf der Website
+    .names--decoration {
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        width: min(12rem, 40%);
+        margin: 1.25rem auto;
+        border-top: 2px solid var(--wedding-gold);
+      }
+    }
+
+    .stage-start__actions {
+      margin-bottom: clamp(0rem, 2vmin, 1.5rem);
+    }
+
+    #collageDiv {
+      border-radius: var(--wedding-radius);
+      border: 1px solid var(--wedding-gold);
+      background: var(--wedding-bg-translucent);
+    }
+  }
+
+  /**
+   * Countdown: Cinzel-Ziffer im Goldkreis, Live-Vorschau bleibt sichtbar
+   */
+  .countdown {
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    pointer-events: none;
+
+    &-number {
+      display: grid;
+      place-items: center;
+      width: min(50vmin, 26rem);
+      aspect-ratio: 1;
+      font-size: min(28vmin, 15rem);
+      line-height: 1;
+      color: var(--wedding-text);
+      border: 3px solid var(--wedding-gold);
+      border-radius: 50%;
+      background: rgba(14, 39, 37, 0.35);
+      text-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.5);
+      animation: wedding-count 1s ease-out forwards;
+    }
+  }
+
+  /**
+   * Cheese ("Lächeln!") direkt vor dem Auslösen
+   */
+  .cheese {
+    font-family: 'Tangerine', serif;
+    font-size: clamp(4rem, 18vmin, 11rem);
+    text-shadow: 0 0.25rem 2rem rgba(0, 0, 0, 0.5);
+
+    // Goldlinien im Textfluss, damit auch zweizeilige Labels ("Lächeln! / 1 / 4") passen
+    .cheese-label {
+      line-height: 1.1;
+
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        width: min(14rem, 40vw);
+        margin: 0.15em auto;
+        border-top: 2px solid var(--wedding-gold);
+      }
+    }
+  }
+
+  /**
+   * Galerie
+   */
+  .gallery {
+    font-family: var(--font-family);
+
+    &-header {
+      border-bottom: 2px solid var(--wedding-gold);
+    }
+
+    &-title h1 {
+      font-family: 'Tangerine', serif;
+      font-size: clamp(2.5rem, 7vmin, 4rem);
+      font-weight: 400;
+      line-height: 1;
+    }
+  }
+
+  .gallery-list {
+    a {
+      border-top: 3px solid var(--wedding-gold);
+      border-bottom: 3px solid var(--wedding-gold);
+      box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.35);
+    }
+
+    figcaption {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--wedding-gold-light);
+    }
+  }
+
+  /**
+   * Dialoge, Modals, Menüs
+   */
+  .modal,
+  .dialog,
+  .sidenav {
+    font-family: var(--font-family);
+
+    h1,
+    h2,
+    h3,
+    .button {
+      font-family: 'Cinzel', serif;
+    }
+  }
+
+  .modal-inner,
+  .dialog {
+    border: 1px solid var(--wedding-gold);
+    border-radius: var(--wedding-radius);
+  }
+
+  /**
+   * Lade-/Aufnahmeseite
+   */
+  .stage--loader .stage-message {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.25rem, 5vmin, 2.75rem);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  /**
+   * Ergebnisseite: Buttonleiste auf grünem Band mit Goldkante
+   */
+  .stage--result .buttonbar--bottom {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: clamp(0.4rem, 1.5vmin, 0.75rem);
+    padding: clamp(0.6rem, 2vmin, 1.1rem) clamp(0.75rem, 3vmin, 2rem);
+    background: var(--wedding-bg-translucent);
+    border-top: 2px solid var(--wedding-gold);
+  }
+
+  .stage-code {
+    border-radius: var(--wedding-radius);
+    border-top: 4px solid var(--wedding-gold);
+    border-bottom: 4px solid var(--wedding-gold);
+  }
+}
+
+/**
+ * Wedding Buttons: Cinzel in Versalien, Gold-Rahmen, Haupt-Button gold gefüllt
+ */
+[data-ui-button='wedding'] {
+  --button-color: var(--wedding-text, #fff);
+  --button-background: transparent;
+  --button-focus-background: rgba(190, 152, 71, 0.2);
+  --button-border-width: 1px;
+  --button-border-color: var(--wedding-gold, #be9847);
+  --button-border-radius: var(--wedding-radius, 10px);
+  --button-font-size: clamp(0.75rem, 2.2vmin, 1.05rem);
+  --button-icon-size: clamp(1rem, 2.8vmin, 1.4rem);
+  --button-padding-y: clamp(0.65rem, 2vmin, 1.1rem);
+  --button-padding-x: clamp(1rem, 3.5vmin, 2rem);
+  --button-gap: 0.65rem;
+
+  .button {
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    transition: background 0.2s ease;
+
+    .button--icon {
+      color: var(--wedding-gold-light, #d2b880);
+    }
+  }
+
+  .stage--start .button.takePic,
+  .stage--result .button.newpic {
+    --button-background: var(--wedding-gold, #be9847);
+    --button-focus-background: color-mix(in srgb, var(--wedding-gold, #be9847), #000 15%);
+
+    .button--icon {
+      color: inherit;
+    }
+  }
+
+  .stage--start .button.takePic {
+    --button-padding-x: clamp(1.5rem, 5vmin, 3rem);
+  }
+
+  .stage--result .button {
+    --button-direction: column;
+    --button-padding-y: 0;
+    --button-padding-x: clamp(0.6rem, 1.8vmin, 1rem);
+    --button-gap: 0.35rem;
+    --button-font-size: clamp(0.55rem, 1.5vmin, 0.75rem);
+    --button-height: clamp(3.25rem, 10vmin, 5rem);
+    min-width: clamp(3.25rem, 10vmin, 5rem);
+    flex-shrink: 0;
+  }
+}
+
+@keyframes wedding-count {
+  0% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+  15%,
+  80% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
