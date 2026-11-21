@@ -150,7 +150,7 @@ html[data-ui-theme='wedding'] {
     }
 
     .names {
-      max-width: min(100%, 60rem);
+      max-width: 100%;
     }
 
     .names-inner {
@@ -169,7 +169,7 @@ html[data-ui-theme='wedding'] {
     .event-text {
       margin: 0;
       font-weight: 400;
-      font-size: clamp(3.5rem, 13vmin, 8rem);
+      font-size: clamp(4.5rem, 19vmin, 12rem);
       line-height: 1;
 
       .fa {
@@ -188,11 +188,11 @@ html[data-ui-theme='wedding'] {
     }
 
     h1.start-text {
-      font-size: clamp(1rem, 3.5vmin, 1.75rem);
+      font-size: clamp(1.25rem, 5vmin, 2.75rem);
     }
 
     h2.start-text {
-      font-size: clamp(0.8rem, 2.5vmin, 1.1rem);
+      font-size: clamp(1rem, 3.5vmin, 1.75rem);
       color: var(--wedding-muted);
     }
 
@@ -202,8 +202,8 @@ html[data-ui-theme='wedding'] {
       &::after {
         content: '';
         display: block;
-        width: min(12rem, 40%);
-        margin: 1.25rem auto;
+        width: min(18rem, 40%);
+        margin: 1.5rem auto;
         border-top: 2px solid var(--wedding-gold);
       }
     }
@@ -390,8 +390,21 @@ html[data-ui-theme='wedding'] {
     }
   }
 
-  .stage--start .button.takePic {
+  // Startseite: große Touch-Buttons
+  .stage--start .button {
+    --button-font-size: clamp(1rem, 3.5vmin, 1.75rem);
+    --button-icon-size: clamp(1.25rem, 4.5vmin, 2.25rem);
+    --button-padding-y: clamp(1rem, 3.5vmin, 1.75rem);
     --button-padding-x: clamp(1.5rem, 5vmin, 3rem);
+    --button-gap: 0.9rem;
+  }
+
+  .stage--start .buttonbar {
+    gap: clamp(0.75rem, 2.5vmin, 1.5rem);
+  }
+
+  .stage--start .button.takePic {
+    --button-padding-x: clamp(2rem, 7vmin, 4.5rem);
   }
 
   .stage--result .button {
