@@ -53,6 +53,12 @@
   rotate: var(--preview-rotation);
 }
 
+// Nur die Live-Vorschau aufhellen (z. B. Blitz-Belichtung im M-Modus), nicht das Foto
+#preview--ipcam,
+#preview--video {
+  filter: brightness(var(--preview-brightness));
+}
+
 #preview--none,
 #previewframe--picture,
 #previewframe--collage {

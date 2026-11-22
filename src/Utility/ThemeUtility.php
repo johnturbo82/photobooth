@@ -29,6 +29,7 @@ class ThemeUtility
             '--background-chroma'  => $backgroundChromaCss,
             '--background-preview' => $config['preview']['url'] ?? '__UNSET__',
             '--preview-rotation' => $config['preview']['rotation'] ?? '__UNSET__',
+            '--preview-brightness' => isset($config['preview']['brightness']) ? (string) ($config['preview']['brightness'] / 100) : '__UNSET__',
             '--ui-scale-result' => $config['ui']['scale_resultImage'] ? 'auto ' . $config['ui']['scale_resultImage'] . '%' : '__UNSET__',
         ];
 

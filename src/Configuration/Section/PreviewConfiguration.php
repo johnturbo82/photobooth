@@ -56,6 +56,17 @@ final class PreviewConfiguration
                         })
                         ->end()
                     ->end()
+                ->integerNode('brightness')
+                    ->defaultValue(100)
+                    ->min(50)
+                    ->max(800)
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function (string $value): int {
+                            return intval($value);
+                        })
+                        ->end()
+                    ->end()
                 ->integerNode('videoWidth')
                     ->defaultValue(1280)
                     ->beforeNormalization()

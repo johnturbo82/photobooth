@@ -1817,6 +1817,16 @@ return [
             'range_step' => 250,
             'unit' => 'milliseconds',
         ],
+        'preview_brightness' => [
+            'type' => 'range',
+            'placeholder' => $defaultConfig['preview']['brightness'],
+            'name' => 'preview[brightness]',
+            'value' => $config['preview']['brightness'],
+            'range_min' => 50,
+            'range_max' => 800,
+            'range_step' => 10,
+            'unit' => 'percent',
+        ],
         'preview_videoWidth' => [
             'type' => 'number',
             'name' => 'preview[videoWidth]',
