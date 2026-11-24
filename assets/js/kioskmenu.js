@@ -6,7 +6,8 @@
 (function () {
     // Touch-Kiosk am Pi: Mauszeiger ausblenden (sonst steht er nach dem Start bis zum ersten Tippen
     // mitten im Bild). Am Mac (Entwicklung) bleibt er sichtbar.
-    if (/Linux/.test(navigator.platform)) {
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins -- läuft im Browser, nicht in Node
+    if (/Linux/.test(window.navigator.userAgent)) {
         document.documentElement.classList.add('kiosk-no-cursor');
     }
 
@@ -77,7 +78,10 @@
             button('Neustart', 'fa-power-off', () => {
                 setMessage('Wirklich neu starten?');
                 actions.innerHTML = '';
-                actions.append(button('Ja, neu starten', 'fa-power-off', reboot, true), button('Abbrechen', null, close));
+                actions.append(
+                    button('Ja, neu starten', 'fa-power-off', reboot, true),
+                    button('Abbrechen', null, close)
+                );
             }),
             button('Abbrechen', null, close, true)
         );
