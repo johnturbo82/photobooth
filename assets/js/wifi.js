@@ -42,8 +42,10 @@
         show('wifi-auto', false);
     }
 
-    function startCountdown(ssid) {
-        setStatus('Verbunden mit ' + ssid);
+    function startCountdown(ssid, ip) {
+        setStatus('Verbunden');
+        el('wifi-info-ssid').textContent = ssid;
+        el('wifi-info-ip').textContent = ip || '–';
         show('wifi-picker', false);
         show('wifi-auto', true);
         let remaining = AUTO_CONTINUE_SECONDS;
@@ -149,7 +151,7 @@
                 busy('');
                 if (data.success) {
                     closeDialog();
-                    startCountdown(ssid);
+                    fetchStatus().then((status) => startCountdown(ssid, status.ip));
                 } else if (password !== '' || !el('wifi-dialog').hidden) {
                     showDialogError('Verbindung fehlgeschlagen. Passwort prüfen.');
                 } else {
@@ -296,7 +298,7 @@
     function waitForConnection(attempt) {
         fetchStatus().then((data) => {
             if (data.connected && data.ssid) {
-                startCountdown(data.ssid);
+                startCountdown(data.ssid, data.ip);
             } else if (data.unavailable) {
                 setStatus('WLAN-Status nicht verfügbar');
                 showListAndWatch();
@@ -322,7 +324,7 @@
             fetchStatus().then((data) => {
                 if (data.connected && data.ssid && !userInteracted) {
                     clearInterval(statusPoll);
-                    startCountdown(data.ssid);
+                    startCountdown(data.ssid, data.ip);
                 }
             });
         }, 4000);

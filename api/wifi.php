@@ -90,11 +90,12 @@ switch ($action) {
         if ($rc !== 0) {
             wifiRespond(500, ['success' => false, 'error' => 'status_failed']);
         }
-        $parts = explode("\t", trim($out), 2);
+        $parts = explode("\t", trim($out), 3);
         wifiRespond(200, [
             'success' => true,
             'connected' => $parts[0] === 'connected',
             'ssid' => $parts[1] ?? null,
+            'ip' => ($parts[2] ?? '') !== '' ? $parts[2] : null,
         ]);
         // no break
 

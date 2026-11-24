@@ -39,6 +39,12 @@ include PathUtility::getAbsolutePath('template/components/main.head.php');
             </div>
         <?php else: ?>
             <div class="wifi-auto" id="wifi-auto" hidden>
+                <dl class="wifi-info">
+                    <dt>Netzwerk</dt>
+                    <dd id="wifi-info-ssid"></dd>
+                    <dt>IP-Adresse</dt>
+                    <dd id="wifi-info-ip"></dd>
+                </dl>
                 <p class="wifi-auto__text">Weiter in <span id="wifi-countdown">5</span> s</p>
                 <div class="wifi-actions">
                     <button type="button" class="button" id="wifi-change">

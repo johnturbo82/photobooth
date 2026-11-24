@@ -7,7 +7,7 @@
 #   sudo install -o root -g root -m 755 scripts/fotobox-wifi.sh /usr/local/bin/fotobox-wifi
 #   echo 'www-data ALL=(root) NOPASSWD: /usr/local/bin/fotobox-wifi' | sudo tee /etc/sudoers.d/030_www-data-wifi
 #
-#   fotobox-wifi status            → "connected<TAB>SSID" oder "disconnected"
+#   fotobox-wifi status            → "connected<TAB>SSID<TAB>IP" oder "disconnected"
 #   fotobox-wifi list              → je Netz: "SSID<TAB>Signal<TAB>Sicherheit<TAB>aktiv(0/1)<TAB>gespeichert(0/1)"
 #   fotobox-wifi connect           → SSID von stdin (1. Zeile), Passwort optional (2. Zeile)
 #   fotobox-wifi reboot            → Fotobox neu starten
@@ -48,7 +48,8 @@ case "${1:-}" in
         nmcli radio wifi on >/dev/null 2>&1
         ssid="$(nmcli -t -f ACTIVE,SSID device wifi list ifname "$DEV" --rescan no 2>/dev/null | awk -F: '$1 == "yes" { sub(/^yes:/, ""); print; exit }')"
         if [ -n "$ssid" ]; then
-            printf 'connected\t%s\n' "$ssid"
+            ip="$(nmcli -g IP4.ADDRESS device show "$DEV" 2>/dev/null | head -n1 | cut -d/ -f1)"
+            printf 'connected\t%s\t%s\n' "$ssid" "$ip"
         else
             echo disconnected
         fi
