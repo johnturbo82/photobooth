@@ -1,0 +1,242 @@
+/**
+ * WLAN-Auswahl (wifi/index.php)
+ */
+.wifi {
+  --wifi-accent: var(--primary-color);
+  --wifi-surface: color-mix(in srgb, var(--primary-light-color), #fff 6%);
+  --wifi-border: color-mix(in srgb, var(--primary-color), transparent 40%);
+  --wifi-text: var(--font-color, #fff);
+  --wifi-muted: color-mix(in srgb, var(--wifi-text), transparent 35%);
+  --wifi-radius: 10px;
+
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 3vmin, 2rem);
+  padding: clamp(1.5rem, 5vmin, 3rem);
+  overflow-y: auto;
+  color: var(--wifi-text);
+  text-align: center;
+
+  &-header {
+    width: 100%;
+  }
+
+  &-title {
+    margin: 0;
+    font-size: clamp(2rem, 7vmin, 4rem);
+    font-weight: 400;
+  }
+
+  &-status,
+  &-message,
+  &-auto__text {
+    margin: 0.5rem 0 0;
+    font-size: clamp(1.1rem, 3.5vmin, 1.75rem);
+    color: var(--wifi-muted);
+  }
+
+  &-auto,
+  &-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1rem, 3vmin, 2rem);
+    width: min(100%, 44rem);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .button {
+    --button-font-size: clamp(1rem, 3vmin, 1.5rem);
+    --button-padding-y: clamp(0.9rem, 3vmin, 1.4rem);
+    --button-padding-x: clamp(1.25rem, 4vmin, 2.5rem);
+  }
+
+  &-continue {
+    --button-background: var(--wifi-accent);
+    --button-border-color: var(--wifi-accent);
+  }
+
+  &-list {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    &__empty {
+      padding: 2rem;
+      color: var(--wifi-muted);
+      font-size: clamp(1rem, 3vmin, 1.5rem);
+    }
+  }
+
+  &-network {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: clamp(0.9rem, 2.8vmin, 1.3rem) clamp(1rem, 3vmin, 1.5rem);
+    border: 1px solid var(--wifi-border);
+    border-radius: var(--wifi-radius);
+    background: var(--wifi-surface);
+    color: inherit;
+    font: inherit;
+    font-size: clamp(1.1rem, 3.2vmin, 1.6rem);
+    text-align: left;
+    cursor: pointer;
+
+    &--active {
+      border-color: var(--wifi-accent);
+      border-width: 2px;
+    }
+
+    &:active {
+      background: color-mix(in srgb, var(--wifi-accent), transparent 75%);
+    }
+
+    &__name {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__meta {
+      font-size: 0.75em;
+      color: var(--wifi-accent);
+    }
+
+    &__lock {
+      color: var(--wifi-muted);
+    }
+  }
+
+  &-signal {
+    color: var(--wifi-accent);
+
+    &--medium {
+      opacity: 0.7;
+    }
+
+    &--weak {
+      opacity: 0.4;
+    }
+  }
+
+  &-dialog,
+  &-busy {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &-busy {
+    z-index: 20;
+    font-size: clamp(1.25rem, 4vmin, 2rem);
+  }
+
+  &-dialog__inner {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 2vmin, 1.25rem);
+    width: min(96vw, 60rem);
+    padding: clamp(1rem, 3vmin, 2rem);
+    border: 1px solid var(--wifi-accent);
+    border-radius: var(--wifi-radius);
+    background: var(--primary-light-color);
+  }
+
+  &-dialog__title {
+    margin: 0;
+    font-size: clamp(1.2rem, 3.5vmin, 1.8rem);
+    font-weight: 400;
+  }
+
+  &-dialog__field {
+    display: flex;
+    gap: 0.5rem;
+
+    input {
+      flex-grow: 1;
+      min-width: 0;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--wifi-accent);
+      border-radius: var(--wifi-radius);
+      background: transparent;
+      color: inherit;
+      font-size: clamp(1.25rem, 4vmin, 2rem);
+      letter-spacing: 0.05em;
+    }
+  }
+
+  &-dialog__error {
+    margin: 0;
+    color: var(--error-color);
+    font-size: clamp(1rem, 2.8vmin, 1.3rem);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &-keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    &__row {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+  }
+
+  &-key {
+    flex: 0 1 4rem;
+    min-width: 0;
+    height: clamp(2.6rem, 8vmin, 4rem);
+    border: 1px solid var(--wifi-border);
+    border-radius: 6px;
+    background: var(--wifi-surface);
+    color: inherit;
+    font-size: clamp(1rem, 3.5vmin, 1.6rem);
+    cursor: pointer;
+
+    &:active,
+    &--active {
+      background: color-mix(in srgb, var(--wifi-accent), transparent 50%);
+    }
+
+    &--wide {
+      flex-basis: 7rem;
+    }
+
+    &--space {
+      flex-basis: 20rem;
+      font-size: clamp(0.8rem, 2.5vmin, 1.1rem);
+    }
+  }
+}
