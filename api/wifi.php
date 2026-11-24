@@ -148,12 +148,13 @@ switch ($action) {
         // no break
 
     case 'reboot':
+    case 'shutdown':
         if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
             wifiRespond(405, ['success' => false, 'error' => 'post_required']);
         }
         checkCsrfOrFail($_POST);
-        // Antwort zuerst senden, der Neustart beendet auch Apache
-        [$rc] = wifiRun('reboot', '', 10);
+        // der Helfer startet Neustart/Herunterfahren verzögert, damit diese Antwort noch rausgeht
+        [$rc] = wifiRun($action, '', 10);
         wifiRespond(200, ['success' => $rc === 0]);
         // no break
 

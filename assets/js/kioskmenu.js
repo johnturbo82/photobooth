@@ -1,6 +1,6 @@
 /* globals photoboothTools */
 /**
- * Verstecktes Kiosk-Menü: 20× schnell irgendwo tippen → WLAN wechseln / Neustart.
+ * Verstecktes Kiosk-Menü: 20× schnell irgendwo tippen → WLAN wechseln / Neustart / Herunterfahren.
  * Wird nur eingebunden, wenn die Seite direkt am Gerät (localhost) läuft.
  */
 (function () {
@@ -48,17 +48,24 @@
         overlay.querySelector('.kioskmenu__message').textContent = text;
     }
 
-    function reboot() {
-        setMessage('Fotobox startet neu …');
+    function power(action, busyText, failText) {
+        setMessage(busyText);
         overlay.querySelectorAll('button').forEach((b) => (b.disabled = true));
         photoboothTools
             .ajaxWithCsrf({
                 url: basePath + 'api/wifi.php',
                 method: 'POST',
                 dataType: 'json',
-                data: { action: 'reboot' }
+                data: { action: action }
             })
-            .fail(() => setMessage('Neustart fehlgeschlagen'));
+            .fail(() => setMessage(failText));
+    }
+
+    function confirm(question, label, icon, onYes) {
+        const actions = overlay.querySelector('.kioskmenu__actions');
+        setMessage(question);
+        actions.innerHTML = '';
+        actions.append(button(label, icon, onYes, true), button('Abbrechen', null, close));
     }
 
     function open() {
@@ -75,14 +82,20 @@
             button('WLAN wechseln', 'fa-wifi', () => {
                 window.location.href = basePath + 'wifi/?manual=1';
             }),
-            button('Neustart', 'fa-power-off', () => {
-                setMessage('Wirklich neu starten?');
-                actions.innerHTML = '';
-                actions.append(
-                    button('Ja, neu starten', 'fa-power-off', reboot, true),
-                    button('Abbrechen', null, close)
-                );
-            }),
+            button('Neustart', 'fa-rotate-right', () =>
+                confirm('Wirklich neu starten?', 'Ja, neu starten', 'fa-rotate-right', () =>
+                    power('reboot', 'Fotobox startet neu …', 'Neustart fehlgeschlagen')
+                )
+            ),
+            button('Herunterfahren', 'fa-power-off', () =>
+                confirm('Wirklich herunterfahren?', 'Ja, herunterfahren', 'fa-power-off', () =>
+                    power(
+                        'shutdown',
+                        'Fotobox fährt herunter … Strom erst trennen, wenn das Display dunkel ist.',
+                        'Herunterfahren fehlgeschlagen'
+                    )
+                )
+            ),
             button('Abbrechen', null, close, true)
         );
         overlay.addEventListener('pointerdown', (event) => event.stopPropagation());

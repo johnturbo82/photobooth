@@ -11,6 +11,7 @@
 #   fotobox-wifi list              → je Netz: "SSID<TAB>Signal<TAB>Sicherheit<TAB>aktiv(0/1)<TAB>gespeichert(0/1)"
 #   fotobox-wifi connect           → SSID von stdin (1. Zeile), Passwort optional (2. Zeile)
 #   fotobox-wifi reboot            → Fotobox neu starten
+#   fotobox-wifi shutdown          → Fotobox herunterfahren
 set -uo pipefail
 export LC_ALL=C
 
@@ -31,9 +32,13 @@ saved_profile() {
     return 1
 }
 
-if [ "${1:-}" = "reboot" ]; then
+if [ "${1:-}" = "reboot" ] || [ "${1:-}" = "shutdown" ]; then
     # verzögert, damit die Weboberfläche noch antworten kann
-    systemd-run --quiet --on-active=2 --unit=fotobox-reboot systemctl reboot
+    if [ "$1" = "reboot" ]; then
+        systemd-run --quiet --on-active=2 --unit=fotobox-reboot systemctl reboot
+    else
+        systemd-run --quiet --on-active=2 --unit=fotobox-poweroff systemctl poweroff
+    fi
     exit $?
 fi
 
@@ -107,7 +112,7 @@ case "${1:-}" in
         ;;
 
     *)
-        echo "usage: fotobox-wifi status|list|connect|reboot" >&2
+        echo "usage: fotobox-wifi status|list|connect|reboot|shutdown" >&2
         exit 1
         ;;
 esac
