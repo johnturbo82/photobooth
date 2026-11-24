@@ -54,3 +54,9 @@
     }
   }
 }
+
+// gesetzt von kioskmenu.js am Touch-Kiosk
+.kiosk-no-cursor,
+.kiosk-no-cursor * {
+  cursor: none !important;
+}

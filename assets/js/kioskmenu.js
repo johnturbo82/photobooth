@@ -4,6 +4,12 @@
  * Wird nur eingebunden, wenn die Seite direkt am Gerät (localhost) läuft.
  */
 (function () {
+    // Touch-Kiosk am Pi: Mauszeiger ausblenden (sonst steht er nach dem Start bis zum ersten Tippen
+    // mitten im Bild). Am Mac (Entwicklung) bleibt er sichtbar.
+    if (/Linux/.test(navigator.platform)) {
+        document.documentElement.classList.add('kiosk-no-cursor');
+    }
+
     const TAPS_NEEDED = 20;
     // maximaler Abstand zwischen zwei Taps, sonst beginnt das Zählen neu
     const MAX_GAP_MS = 700;
