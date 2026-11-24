@@ -329,5 +329,14 @@
     }
 
     resetIdleTimer();
-    waitForConnection(0);
+    if (new URLSearchParams(window.location.search).has('manual')) {
+        // aus dem Kiosk-Menü aufgerufen: nicht automatisch weiterspringen
+        userInteracted = true;
+        fetchStatus().then((data) =>
+            setStatus(data.connected && data.ssid ? 'Verbunden mit ' + data.ssid : 'Nicht verbunden')
+        );
+        scan();
+    } else {
+        waitForConnection(0);
+    }
 })();

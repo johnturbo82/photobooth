@@ -1,5 +1,5 @@
 #!/bin/bash
-# WLAN-Helfer für die WLAN-Seite der Fotobox (wifi/).
+# WLAN- und Neustart-Helfer für den Kiosk der Fotobox (wifi/, verstecktes Kiosk-Menü).
 #
 # Wird von api/wifi.php per "sudo /usr/local/bin/fotobox-wifi" aufgerufen und läuft
 # als root. Deshalb: nur feste Unterbefehle, alle Eingaben werden geprüft.
@@ -10,6 +10,7 @@
 #   fotobox-wifi status            → "connected<TAB>SSID" oder "disconnected"
 #   fotobox-wifi list              → je Netz: "SSID<TAB>Signal<TAB>Sicherheit<TAB>aktiv(0/1)<TAB>gespeichert(0/1)"
 #   fotobox-wifi connect           → SSID von stdin (1. Zeile), Passwort optional (2. Zeile)
+#   fotobox-wifi reboot            → Fotobox neu starten
 set -uo pipefail
 export LC_ALL=C
 
@@ -29,6 +30,12 @@ saved_profile() {
     done < <(nmcli -g NAME,TYPE connection show | awk -F: '$2 == "802-11-wireless" { print $1 }')
     return 1
 }
+
+if [ "${1:-}" = "reboot" ]; then
+    # verzögert, damit die Weboberfläche noch antworten kann
+    systemd-run --quiet --on-active=2 --unit=fotobox-reboot systemctl reboot
+    exit $?
+fi
 
 DEV="$(wifi_device)"
 if [ -z "$DEV" ]; then
@@ -99,7 +106,7 @@ case "${1:-}" in
         ;;
 
     *)
-        echo "usage: fotobox-wifi status|list|connect" >&2
+        echo "usage: fotobox-wifi status|list|connect|reboot" >&2
         exit 1
         ;;
 esac

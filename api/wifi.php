@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WLAN-Steuerung für die Startseite des Kiosks (wifi/).
+ * WLAN-Steuerung und Neustart für den Kiosk (wifi/, verstecktes Kiosk-Menü).
  *
  * Nur vom Gerät selbst erreichbar (localhost), damit Gäste im WLAN die
  * Verbindung der Fotobox nicht ändern können. Die eigentliche Arbeit macht
@@ -144,6 +144,16 @@ switch ($action) {
             wifiRespond(200, ['success' => false, 'error' => 'connect_failed']);
         }
         wifiRespond(200, ['success' => true, 'ssid' => $ssid]);
+        // no break
+
+    case 'reboot':
+        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+            wifiRespond(405, ['success' => false, 'error' => 'post_required']);
+        }
+        checkCsrfOrFail($_POST);
+        // Antwort zuerst senden, der Neustart beendet auch Apache
+        [$rc] = wifiRun('reboot', '', 10);
+        wifiRespond(200, ['success' => $rc === 0]);
         // no break
 
     default:
