@@ -15,6 +15,9 @@
     let countdownTimer = null;
     let idleTimer = null;
     let selectedSsid = null;
+    // sobald jemand tippt, nicht mehr automatisch weiterspringen
+    let userInteracted = false;
+    let statusPoll = null;
 
     function goToStart() {
         window.location.href = startUrl;
@@ -274,21 +277,57 @@
     el('wifi-continue-now').addEventListener('click', goToStart);
     el('wifi-rescan').addEventListener('click', scan);
     el('wifi-skip').addEventListener('click', goToStart);
-    document.addEventListener('pointerdown', resetIdleTimer);
+    document.addEventListener('pointerdown', () => {
+        userInteracted = true;
+        resetIdleTimer();
+    });
 
-    // Start: verbunden → Countdown, sonst Netze anzeigen
-    resetIdleTimer();
-    $.getJSON(API, { action: 'status' })
-        .done((data) => {
+    function fetchStatus() {
+        return $.getJSON(API, { action: 'status' }).then(
+            (data) => data,
+            () => ({ connected: false, unavailable: true })
+        );
+    }
+
+    // Beim Booten verbindet sich das gespeicherte WLAN oft erst nach der Seite:
+    // daher eine Weile warten, bevor die Liste kommt (BOOT_WAIT_TRIES × 2 s).
+    const BOOT_WAIT_TRIES = 10;
+
+    function waitForConnection(attempt) {
+        fetchStatus().then((data) => {
             if (data.connected && data.ssid) {
                 startCountdown(data.ssid);
+            } else if (data.unavailable) {
+                setStatus('WLAN-Status nicht verfügbar');
+                showListAndWatch();
+            } else if (attempt < BOOT_WAIT_TRIES && !userInteracted) {
+                setStatus('Suche gespeichertes WLAN …');
+                setTimeout(() => waitForConnection(attempt + 1), 2000);
             } else {
                 setStatus('Nicht verbunden – bitte WLAN wählen');
-                scan();
+                showListAndWatch();
             }
-        })
-        .fail(() => {
-            setStatus('WLAN-Status nicht verfügbar');
-            scan();
         });
+    }
+
+    // Liste anzeigen und im Hintergrund weiter prüfen, ob doch eine Verbindung zustande kommt
+    function showListAndWatch() {
+        scan();
+        clearInterval(statusPoll);
+        statusPoll = setInterval(() => {
+            if (userInteracted || countdownTimer) {
+                clearInterval(statusPoll);
+                return;
+            }
+            fetchStatus().then((data) => {
+                if (data.connected && data.ssid && !userInteracted) {
+                    clearInterval(statusPoll);
+                    startCountdown(data.ssid);
+                }
+            });
+        }, 4000);
+    }
+
+    resetIdleTimer();
+    waitForConnection(0);
 })();
