@@ -44,6 +44,8 @@ include PathUtility::getAbsolutePath('template/components/main.head.php');
                     <dd id="wifi-info-ssid"></dd>
                     <dt>IP-Adresse</dt>
                     <dd id="wifi-info-ip"></dd>
+                    <dt>Name</dt>
+                    <dd id="wifi-info-hostname"></dd>
                 </dl>
                 <p class="wifi-auto__text">Weiter in <span id="wifi-countdown">5</span> s</p>
                 <div class="wifi-actions">

@@ -7,13 +7,21 @@
 #   sudo install -o root -g root -m 755 scripts/fotobox-wifi.sh /usr/local/bin/fotobox-wifi
 #   echo 'www-data ALL=(root) NOPASSWD: /usr/local/bin/fotobox-wifi' | sudo tee /etc/sudoers.d/030_www-data-wifi
 #
-#   fotobox-wifi status            → "connected<TAB>SSID<TAB>IP" oder "disconnected"
+#   fotobox-wifi status            → "connected<TAB>SSID<TAB>IP<TAB>Name" oder "disconnected"
 #   fotobox-wifi list              → je Netz: "SSID<TAB>Signal<TAB>Sicherheit<TAB>aktiv(0/1)<TAB>gespeichert(0/1)"
 #   fotobox-wifi connect           → SSID von stdin (1. Zeile), Passwort optional (2. Zeile)
 #   fotobox-wifi reboot            → Fotobox neu starten
 #   fotobox-wifi shutdown          → Fotobox herunterfahren
 set -uo pipefail
 export LC_ALL=C
+
+# Name, unter dem die Fotobox im Netz erreichbar ist (avahi kann z. B. auf fotobox-2.local ausweichen)
+mdns_name() {
+    local name
+    name="$(busctl call org.freedesktop.Avahi / org.freedesktop.Avahi.Server GetHostNameFqdn 2>/dev/null | sed -n 's/^s "\(.*\)"$/\1/p')"
+    [ -n "$name" ] || name="$(hostname).local"
+    printf '%s\n' "$name"
+}
 
 wifi_device() {
     nmcli -t -f DEVICE,TYPE device status | awk -F: '$2 == "wifi" { print $1; exit }'
@@ -54,7 +62,7 @@ case "${1:-}" in
         ssid="$(nmcli -t -f ACTIVE,SSID device wifi list ifname "$DEV" --rescan no 2>/dev/null | awk -F: '$1 == "yes" { sub(/^yes:/, ""); print; exit }')"
         if [ -n "$ssid" ]; then
             ip="$(nmcli -g IP4.ADDRESS device show "$DEV" 2>/dev/null | head -n1 | cut -d/ -f1)"
-            printf 'connected\t%s\t%s\n' "$ssid" "$ip"
+            printf 'connected\t%s\t%s\t%s\n' "$ssid" "$ip" "$(mdns_name)"
         else
             echo disconnected
         fi
